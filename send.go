@@ -56,6 +56,10 @@ func (cn *Conn) send(ctx context.Context, topic string, msg *InputMessage) (err 
 
 	defer resp.Body.Close()
 
+	if resp.StatusCode == http.StatusGone {
+		return ErrNoConsumers
+	}
+
 	if resp.StatusCode != http.StatusCreated {
 		return fmt.Errorf("bad status code: %d, expect 201", resp.StatusCode)
 	}

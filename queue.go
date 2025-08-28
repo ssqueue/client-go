@@ -7,6 +7,7 @@ import (
 
 var (
 	ErrNoConnection = errors.New("no connection")
+	ErrNoConsumers  = errors.New("no consumers")
 	ErrNoMessage    = errors.New("no message")
 )
 
