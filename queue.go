@@ -1,0 +1,42 @@
+package queue
+
+import (
+	"errors"
+	"net/http"
+)
+
+var (
+	ErrNoConnection = errors.New("no connection")
+	ErrNoMessage    = errors.New("no message")
+)
+
+var defaultConnection *Conn
+
+type Options struct {
+	Address string
+}
+
+// Init initializes the default connection to the message queue server.
+func Init(opts Options) {
+	c := &Conn{
+		httpClient: &http.Client{},
+		address:    opts.Address,
+	}
+
+	defaultConnection = c
+}
+
+// Connect creates a new connection to the message queue server.
+func Connect(opts Options) *Conn {
+	c := &Conn{
+		httpClient: &http.Client{},
+		address:    opts.Address,
+	}
+
+	return c
+}
+
+type Conn struct {
+	httpClient *http.Client
+	address    string
+}
