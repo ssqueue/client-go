@@ -14,6 +14,7 @@ var (
 var defaultConnection *Conn
 
 type Options struct {
+	Name    string
 	Address string
 }
 
@@ -22,6 +23,7 @@ func Init(opts Options) {
 	c := &Conn{
 		httpClient: &http.Client{},
 		address:    opts.Address,
+		name:       opts.Name,
 	}
 
 	defaultConnection = c
@@ -40,4 +42,21 @@ func Connect(opts Options) *Conn {
 type Conn struct {
 	httpClient *http.Client
 	address    string
+	name       string
+}
+
+func Ready() bool {
+	if defaultConnection == nil {
+		return false
+	}
+
+	return defaultConnection.Ready()
+}
+
+func (cn *Conn) Ready() bool {
+	if cn == nil {
+		return false
+	}
+
+	return true
 }
