@@ -19,21 +19,22 @@ type Options struct {
 }
 
 // Init initializes the default connection to the message queue server.
-func Init(opts Options) {
-	c := &Conn{
-		httpClient: &http.Client{},
-		address:    opts.Address,
-		name:       opts.Name,
-	}
+// Name is the name of the client.
+// Address is the address of the message queue server.
+func Init(name, address string) {
+	c := Connect(name, address)
 
 	defaultConnection = c
 }
 
 // Connect creates a new connection to the message queue server.
-func Connect(opts Options) *Conn {
+// Name is the name of the client.
+// Address is the address of the message queue server.
+func Connect(name, address string) *Conn {
 	c := &Conn{
-		httpClient: &http.Client{},
-		address:    opts.Address,
+		httpClient: &http.Client{Timeout: 0},
+		name:       name,
+		address:    address,
 	}
 
 	return c

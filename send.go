@@ -23,18 +23,27 @@ func (cn *Conn) SendString(ctx context.Context, topic string, msg string) error 
 		Persistent: false,
 	}
 
-	return cn.send(ctx, topic, &im)
+	return cn.SendMessage(ctx, topic, im)
 }
 
-func (cn *Conn) send(ctx context.Context, topic string, msg *InputMessage) (err error) {
+func SendMessage(ctx context.Context, topic string, msg InputMessage) (err error) {
+	if defaultConnection == nil {
+		return ErrNoConnection
+	}
+	return defaultConnection.SendMessage(ctx, topic, msg)
+}
+
+func (cn *Conn) SendMessage(ctx context.Context, topic string, msg InputMessage) (err error) {
 	type request struct {
+		Name  string `json:"name"`
 		Topic string `json:"topic,omitempty"`
 		InputMessage
 	}
 
 	reqMsg := request{
+		Name:         cn.name,
 		Topic:        topic,
-		InputMessage: *msg,
+		InputMessage: msg,
 	}
 
 	data, errEncode := json.Marshal(reqMsg)
